@@ -32,8 +32,6 @@ class _QuizPageState extends State<QuizPage> {
   List<Widget> scoreTracker = [
   ];
 
-  int questionNum = 0;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -46,7 +44,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                quizBrain.questionBank[questionNum].questionText,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -72,13 +70,13 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
-                bool correctanswer =  quizBrain.questionBank[questionNum].questionAnswer;
+                bool correctanswer =  quizBrain.getQuestionAnswer();
 
                 if (correctanswer == true){
                   print('you got it');
                 }
                 setState(() {
-                  questionNum +=1;
+                  quizBrain.nextQuestion();
                 });
               },
             ),
@@ -100,13 +98,13 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
-                bool correctanswer =  quizBrain.questionBank[questionNum].questionAnswer;
+                bool correctanswer =  quizBrain.getQuestionAnswer();
 
                 if (correctanswer == false){
                   print('you got it');
                 }
                 setState(() {
-                  questionNum++;
+                  quizBrain.nextQuestion();
                 });
               },
             ),
