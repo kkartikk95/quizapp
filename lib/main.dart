@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'quizbrain.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(Quizzler());
 
@@ -27,15 +30,9 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
 
   List<Widget> scoreTracker = [
-    Icon(
-      Icons.check,
-      color: Colors.green,
-    ),
-    Icon(
-      Icons.close,
-      color: Colors.red,
-    ),
   ];
+
+  int questionNum = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +46,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                quizBrain.questionBank[questionNum].questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -75,13 +72,13 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
+                bool correctanswer =  quizBrain.questionBank[questionNum].questionAnswer;
+
+                if (correctanswer == true){
+                  print('you got it');
+                }
                 setState(() {
-                  scoreTracker.add(
-                    Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ),
-                  );
+                  questionNum +=1;
                 });
               },
             ),
@@ -103,13 +100,13 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
+                bool correctanswer =  quizBrain.questionBank[questionNum].questionAnswer;
+
+                if (correctanswer == false){
+                  print('you got it');
+                }
                 setState(() {
-                  scoreTracker.add(
-                    Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ),
-                  );
+                  questionNum++;
                 });
               },
             ),
