@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'quizbrain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 QuizBrain quizBrain = QuizBrain();
 
@@ -28,9 +29,49 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Widget> scoreTracker = [];
 
-  List<Widget> scoreTracker = [
-  ];
+  void checkAnswer(bool userAns) {
+    bool correctanswer = quizBrain.getQuestionAnswer();
+    setState(() {
+      //TODO: Step 4 - Use IF/ELSE to check if we've reached the end of the quiz. If so,
+      //On the next line, you can also use if (quizBrain.isFinished()) {}, it does the same thing.
+      if (quizBrain.isFinished() == true) {
+        //TODO Step 4 Part A - show an alert using rFlutter_alert,
+
+        //This is the code for the basic alert from the docs for rFlutter Alert:
+        //Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.").show();
+
+        //Modified for our purposes:
+        Alert(
+          context: context,
+          title: 'Finished!',
+          desc: 'You\'ve reached the end of the quiz.',
+        ).show();
+
+        //TODO Step 4 Part C - reset the questionNumber,
+        quizBrain.reset();
+
+        //TODO Step 4 Part D - empty out the scoreKeeper.
+        scoreTracker = [];
+      }
+
+
+
+      if (userAns == correctanswer) {
+        scoreTracker.add(Icon(
+          Icons.check,
+          color: Colors.green,
+        ));
+      } else {
+        scoreTracker.add(Icon(
+          Icons.close,
+          color: Colors.red,
+        ));
+      }
+      quizBrain.nextQuestion();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,14 +111,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
-                bool correctanswer =  quizBrain.getQuestionAnswer();
-
-                if (correctanswer == true){
-                  print('you got it');
-                }
-                setState(() {
-                  quizBrain.nextQuestion();
-                });
+                checkAnswer(true);
               },
             ),
           ),
@@ -85,29 +119,21 @@ class _QuizPageState extends State<QuizPage> {
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(15.0),
-            child:  TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.red,
-              ),
-              child: Text(
-                'False',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
+            child: TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.red,
                 ),
-              ),
-              onPressed: () {
-                //The user picked false.
-                bool correctanswer =  quizBrain.getQuestionAnswer();
-
-                if (correctanswer == false){
-                  print('you got it');
-                }
-                setState(() {
-                  quizBrain.nextQuestion();
-                });
-              },
-            ),
+                child: Text(
+                  'False',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  //The user picked false.
+                  checkAnswer(false);
+                }),
           ),
         ),
         //TODO: Add a Row here as your score keeper
